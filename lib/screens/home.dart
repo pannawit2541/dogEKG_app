@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:async/async.dart';
 import 'dart:math';
 
@@ -19,12 +21,18 @@ class _HomeState extends State<Home> {
   List<double> traceDust = [];
   double i = 8;
 
+  // Stream<Uint8List> wa
+
   Stream<String> _clock() async* {
-    while (true) {
-      int randomNumber = random.nextInt(200);
-      await Future<void>.delayed(Duration(milliseconds: 180));
-      yield '$randomNumber';
-    }
+    // while (true) {
+    //   int randomNumber = random.nextInt(200);
+    //   await Future<void>.delayed(Duration(milliseconds: 180));
+    //   yield '$randomNumber';
+    // }
+    // connection.input.listen((Uint8List data) {
+    //   // print(ascii.decode(data));
+      
+    // });
   }
 
   List<Color> backgroundColor = [
@@ -95,12 +103,6 @@ class _HomeState extends State<Home> {
   BluetoothDevice _device;
   bool _connected = false;
   bool _isButtonUnavailable = false;
-
-  // TODO Define Recieve Data
-  List<List<int>> chunks = <List<int>>[];
-  int contentLength = 0;
-
-  RestartableTimer _timer;
 
   @override
   void initState() {
