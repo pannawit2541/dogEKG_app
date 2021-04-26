@@ -21,20 +21,6 @@ class _HomeState extends State<Home> {
   List<double> traceDust = [];
   double i = 8;
 
-  // Stream<Uint8List> wa
-
-  Stream<String> _clock() async* {
-    // while (true) {
-    //   int randomNumber = random.nextInt(200);
-    //   await Future<void>.delayed(Duration(milliseconds: 180));
-    //   yield '$randomNumber';
-    // }
-    // connection.input.listen((Uint8List data) {
-    //   // print(ascii.decode(data));
-      
-    // });
-  }
-
   List<Color> backgroundColor = [
     const Color(0xff3fe1ce),
     const Color(0xff29c8c8)
@@ -70,16 +56,6 @@ class _HomeState extends State<Home> {
     FlSpot(5, 0),
     FlSpot(6, 0),
   ];
-
-  _generateData(double data) {
-    double result;
-    if (data % 2 == 0) {
-      result = data * 0.8;
-    } else {
-      result = data * 0.6;
-    }
-    return result;
-  }
 
   // Variables for the Bluetooth functions
   Color activeColor = Color(0xff29c8c8);
@@ -201,10 +177,6 @@ class _HomeState extends State<Home> {
           setState(() {
             _connected = true;
           });
-
-          // connection.input.listen((Uint8List data) {
-          //   print(ascii.decode(data));
-          // });
         }).catchError((error) {
           print('Cannot connect, exception occurred');
           print(error);
@@ -316,21 +288,30 @@ class _HomeState extends State<Home> {
       body: Stack(
         children: [
           SafeArea(
-            child: StreamBuilder<Object>(
-                stream: _clock(),
+            child: StreamBuilder<Uint8List>(
+                stream: connection != null ? connection.input : ascii.encode('0,0'),
+                // initialData: ascii.encode('(0,0)'),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator();
                   } else {
-                    var item = double.parse(snapshot.data);
+                    try {
+                      () async => await Future<void>.delayed(Duration(milliseconds: 100));
+                      var item = ascii.decode(snapshot.data).split(',');
+                      // print(ascii.decode(snapshot.data));
+                      print(item[0] + ' ::::: ' + item[1]);
+                      double v1 = double.parse(item[0]);
+                      double v2 = double.parse(item[1]);
 
-                    _values1.removeAt(0);
-                    _values1.add(FlSpot(i, item));
+                      _values1.removeAt(0);
+                      _values1.add(FlSpot(i, v1));
 
-                    _values2.removeAt(0);
-                    item = _generateData(item);
-                    _values2.add(FlSpot(i, item));
-                    i += 1;
+                      _values2.removeAt(0);
+                      // item = _generateData(i);
+                      _values2.add(FlSpot(i, v2));
+                      i += 1;
+                    } catch (NumberFormatException) {}
+
                     return Container(
                       child: Container(
                         child: Column(
@@ -396,7 +377,7 @@ class _HomeState extends State<Home> {
                                                                       'SourceSansPro')),
                                                       bottomTitles: SideTitles(
                                                           showTitles: false)),
-                                                  maxY: 200,
+                                                  maxY: 4500,
                                                   minY: 0,
                                                   rangeAnnotations:
                                                       RangeAnnotations(
