@@ -31,6 +31,7 @@ dependencies:
   fl_chart: ^0.35.0
   flutter_blue: ^0.8.0
   flutter_bluetooth_serial: ^0.2.2
+
   google_fonts: ^2.0.0
 
 dev_dependencies:
