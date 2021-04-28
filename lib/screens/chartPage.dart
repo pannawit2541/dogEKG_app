@@ -2,22 +2,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class ChartPage extends StatefulWidget {
-  List<FlSpot> value = [
-    FlSpot(0, 0),
-    FlSpot(1, 0),
-    FlSpot(2, 0),
-    FlSpot(3, 0),
-    FlSpot(4, 0),
-    FlSpot(5, 0),
-    FlSpot(6, 0),
-    FlSpot(7, 0),
-    FlSpot(8, 0),
-    FlSpot(9, 0),
-    FlSpot(10, 0),
-    FlSpot(11, 0),
-    FlSpot(12, 0),
-    FlSpot(13, 0),
-  ];
+
+  List<FlSpot> value = [for(double i=0; i<30 ;i++) FlSpot(i, 0)];
 
   List<Color> lineColor = [const Color(0xfffe632b)];
   // ChartPage({Key key, @required this.value}) : super(key: key);
