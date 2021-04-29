@@ -30,9 +30,11 @@ class _TopBarState extends State<TopBar> {
                   borderRadius: BorderRadius.circular(borderRadius)),
               child: Center(
                 child: Row(
-                  // mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
                       icon: Icon(
                         Icons.menu,
                         color: Color(0xff613bff),
@@ -86,7 +88,7 @@ class _TopBarState extends State<TopBar> {
                         child: Text(
                           "${widget.wave2}",
                           style: TextStyle(
-                              color: Color(0xffec72da),
+                              color: Color(0xfffa7167),
                               fontWeight: FontWeight.bold),
                         ),
                       ))),
