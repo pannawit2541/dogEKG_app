@@ -29,33 +29,33 @@ class _TopBarState extends State<TopBar> {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(borderRadius)),
               child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    IconButton(
-                      padding: EdgeInsets.zero,
-                      constraints: BoxConstraints(),
-                      icon: Icon(
-                        Icons.menu,
-                        color: Color(0xff613bff),
+                child: GestureDetector(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        padding: EdgeInsets.zero,
+                        constraints: BoxConstraints(),
+                        icon: Icon(
+                          Icons.menu,
+                          color: Color(0xff613bff),
+                        ),
                       ),
-                      onPressed: () {
-                        widget.scaffoldKey.currentState.openDrawer();
-                      },
-                    ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Container(
-                      child: Text(
-                        "DOG-EKG",
-                        style: TextStyle(
-                            color: Color(0xff1a1f32),
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18),
+                      SizedBox(
+                        width: 20,
                       ),
-                    ),
-                  ],
+                      Container(
+                        child: Text(
+                          "DOG-EKG",
+                          style: TextStyle(
+                              color: Color(0xff1a1f32),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18),
+                        ),
+                      ),
+                    ],
+                  ),
+                  onTap: () => {widget.scaffoldKey.currentState.openDrawer()},
                 ),
               ),
             ),

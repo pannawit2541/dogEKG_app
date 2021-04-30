@@ -2,10 +2,9 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class ChartPage extends StatefulWidget {
+  List<FlSpot> value;
 
-  List<FlSpot> value = [for(double i=0; i<50 ;i++) FlSpot(i, 0)];
-
-  List<Color> lineColor = [const Color(0xfffe632b)];
+  List<Color> lineColor;
   // ChartPage({Key key, @required this.value}) : super(key: key);
   ChartPage({Key key, this.value, this.lineColor}) : super(key: key);
   @override
@@ -13,18 +12,30 @@ class ChartPage extends StatefulWidget {
 }
 
 class _ChartPageState extends State<ChartPage> {
-
+  Color _color ;
   // double interval = widget.value.
+  @override
+  void initState() {
+    super.initState();
+    _color = widget.lineColor.first;
+  }
 
-  FlTitlesData titlesData = FlTitlesData(
-      leftTitles: SideTitles(
-          showTitles: false,
-          interval: 5,
-          getTextStyles: (value) => const TextStyle(
-              color: Color(0xffd2d3d6),
-              fontWeight: FontWeight.bold,
-              fontFamily: 'SourceSansPro')),
-      bottomTitles: SideTitles(showTitles: false));
+  // FlTitlesData titlesData = FlTitlesData(
+  //     leftTitles: SideTitles(
+  //         showTitles: false,
+  //         interval: 5,
+  //         getTextStyles: (value) => const TextStyle(
+  //             color: Color(0xffd2d3d6),
+  //             fontWeight: FontWeight.bold,
+  //             fontFamily: 'SourceSansPro')),
+  //     bottomTitles: SideTitles(
+  //       showTitles: true,
+  //       reservedSize: 0,
+  //       interval: 5,
+  //       getTitles: (value) => '|',
+  //       getTextStyles: (value) =>
+  //           TextStyle(color: _color, fontWeight: FontWeight.w200),
+  //     ));
 
   // RangeAnnotations rangeAnnotations =
   //     RangeAnnotations(verticalRangeAnnotations: []);
@@ -32,8 +43,7 @@ class _ChartPageState extends State<ChartPage> {
       getDrawingHorizontalLine: (value) =>
           FlLine(color: Color(0xfff2f3f9), strokeWidth: 2),
       show: false,
-      horizontalInterval: 5
-      );
+      horizontalInterval: 5);
   FlBorderData borderData = FlBorderData(
     show: false,
   );
@@ -42,7 +52,16 @@ class _ChartPageState extends State<ChartPage> {
   Widget build(BuildContext context) {
     return Container(
       child: LineChart(LineChartData(
-          titlesData: titlesData,
+          titlesData: FlTitlesData(
+            leftTitles: SideTitles(showTitles: false),
+              bottomTitles: SideTitles(
+            showTitles: true,
+            reservedSize: 0,
+            interval: 5,
+            getTitles: (value) => '|',
+            getTextStyles: (value) =>
+                TextStyle(color: _color, fontWeight: FontWeight.w200),
+          )),
           // rangeAnnotations: rangeAnnotations,
           gridData: gridData,
           borderData: borderData,

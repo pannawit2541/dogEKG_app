@@ -40,13 +40,15 @@ class _HomeState extends State<Home> {
   bool _connected = false;
   bool _isButtonUnavailable = false;
 
-  List<FlSpot> _value1 = [for (double i = 0; i < 50; i++) FlSpot(i, 0)];
-  List<FlSpot> _value2 = [for (double i = 0; i < 50; i++) FlSpot(i, 0)];
+  List<FlSpot> _value1 = [for (double i = 0; i <= 60; i++) FlSpot(i, 0)];
+  List<FlSpot> _value2 = [for (double i = 0; i <= 60; i++) FlSpot(i, 0)];
 
   Color primaryColor1 = const Color(0xff6340f2);
   Color primaryColor2 = const Color(0xfffa7167);
 
   Color secondaryColor1 = Color(0xff1a1f32);
+  Color bgColor = Color(0xffededef);
+
 
   // Color switchColor = Color(0xff1a1f32);
   Stream<Uint8List> _tempData() async* {
@@ -235,9 +237,7 @@ class _HomeState extends State<Home> {
               leading: DropdownButton(
                 hint: Text(
                   'Select device',
-                  style: TextStyle(
-                      color: secondaryColor1,
-                      fontSize: 12),
+                  style: TextStyle(color: secondaryColor1, fontSize: 12),
                 ),
                 items: _getDeviceItems(),
                 onChanged: (value) => setState(() => _device = value),
@@ -258,15 +258,15 @@ class _HomeState extends State<Home> {
       body: Stack(children: [
         SafeArea(
             child: StreamBuilder<Uint8List>(
-                stream:  connection != null ? connection.input : _tempData(),
+                stream: connection != null ? connection.input : _tempData(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return CircularProgressIndicator();
                   } else {
                     try {
                       // ignore: unnecessary_statements
-                      () async => await Future<void>.delayed(
-                          Duration(seconds: 1));
+                      () async =>
+                          await Future<void>.delayed(Duration(seconds: 10));
                       var wave = ascii.decode(snapshot.data).split(',');
                       var i = (_value1.last.x) + 1;
                       // double v1 = double.parse(wave[0]);
@@ -281,9 +281,8 @@ class _HomeState extends State<Home> {
                       i += 1;
                     } catch (NumberFormatException) {}
 
-
                     return Container(
-                      color: Color(0xffededef),
+                      color: bgColor,
                       child: Padding(
                         padding: const EdgeInsets.all(8),
                         child: Container(
@@ -315,6 +314,7 @@ class _HomeState extends State<Home> {
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(10),
                                       child: Container(
+                                        // padding: EdgeInsets.only(left:30),
                                           decoration: BoxDecoration(
                                             color: Color(0xffffffff),
                                           ),
@@ -323,7 +323,7 @@ class _HomeState extends State<Home> {
                                               Expanded(
                                                   child: Container(
                                                 margin: EdgeInsets.fromLTRB(
-                                                    0, 20, 20, 10),
+                                                    20, 20, 20, 10),
                                                 child: ChartPage(
                                                   value: _value1,
                                                   lineColor: [primaryColor1],
@@ -332,7 +332,7 @@ class _HomeState extends State<Home> {
                                               Expanded(
                                                   child: Container(
                                                 margin: EdgeInsets.fromLTRB(
-                                                    0, 10, 20, 20),
+                                                    20, 10, 20, 20),
                                                 child: ChartPage(
                                                   value: _value2,
                                                   lineColor: [primaryColor2],
