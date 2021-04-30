@@ -20,16 +20,16 @@ class _TopBarState extends State<TopBar> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(top: marginBox, bottom: marginBox),
-            width: 200,
-            child: Card(
-              color: Color(0xfffbfcff),
-              shadowColor: Colors.transparent,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(borderRadius)),
-              child: Center(
-                child: GestureDetector(
+          GestureDetector(
+            child: Container(
+              margin: EdgeInsets.only(top: marginBox, bottom: marginBox),
+              width: 200,
+              child: Card(
+                color: Color(0xfffbfcff),
+                shadowColor: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(borderRadius)),
+                child: Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -55,10 +55,11 @@ class _TopBarState extends State<TopBar> {
                       ),
                     ],
                   ),
-                  onTap: () => {widget.scaffoldKey.currentState.openDrawer()},
+                  
                 ),
               ),
             ),
+            onTap: () => {widget.scaffoldKey.currentState.openDrawer()},
           ),
           Container(
             margin: EdgeInsets.only(top: marginBox, bottom: marginBox),
@@ -92,7 +93,6 @@ class _TopBarState extends State<TopBar> {
                               fontWeight: FontWeight.bold),
                         ),
                       ))),
-              // SizedBox(width: 30),
             ]),
           )
         ],

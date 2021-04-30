@@ -50,35 +50,39 @@ class _ChartPageState extends State<ChartPage> {
   LineTouchData lineTouchData = LineTouchData(enabled: false);
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: LineChart(LineChartData(
-          titlesData: FlTitlesData(
-            leftTitles: SideTitles(showTitles: false),
-              bottomTitles: SideTitles(
-            showTitles: true,
-            reservedSize: 0,
-            interval: 5,
-            getTitles: (value) => '|',
-            getTextStyles: (value) =>
-                TextStyle(color: _color, fontWeight: FontWeight.w200),
-          )),
-          // rangeAnnotations: rangeAnnotations,
-          gridData: gridData,
-          borderData: borderData,
-          lineTouchData: lineTouchData,
-          lineBarsData: [
-            LineChartBarData(
-              curveSmoothness: 0.4,
-              colors: widget.lineColor,
-              colorStops: [0, 0.7, 1],
-              barWidth: 2,
-              spots: widget.value,
-              isCurved: true,
-              dotData: FlDotData(
-                show: false,
-              ),
-            )
-          ])),
+    return ClipRRect(
+       borderRadius: BorderRadius.circular(20),
+      child: Container(
+        color: Color(0xfffbfcff),
+        child: LineChart(LineChartData(
+            titlesData: FlTitlesData(
+              leftTitles: SideTitles(showTitles: false),
+                bottomTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 0,
+              interval: 5,
+              getTitles: (value) => '|',
+              getTextStyles: (value) =>
+                  TextStyle(color: _color, fontWeight: FontWeight.w200),
+            )),
+            // rangeAnnotations: rangeAnnotations,
+            gridData: gridData,
+            borderData: borderData,
+            lineTouchData: lineTouchData,
+            lineBarsData: [
+              LineChartBarData(
+                curveSmoothness: 0.4,
+                colors: widget.lineColor,
+                colorStops: [0, 0.7, 1],
+                barWidth: 2,
+                spots: widget.value,
+                isCurved: true,
+                dotData: FlDotData(
+                  show: false,
+                ),
+              )
+            ])),
+      ),
     );
   }
 }

@@ -45,10 +45,11 @@ class _HomeState extends State<Home> {
 
   Color primaryColor1 = const Color(0xff6340f2);
   Color primaryColor2 = const Color(0xfffa7167);
+  Color primartCorlor1_light = const Color(0xffededf9);
+  Color primartCorlor2_light = const Color(0xfffeeefb);
 
-  Color secondaryColor1 = Color(0xff1a1f32);
+  Color headerTxtColor1 = Color(0xff1a1f32);
   Color bgColor = Color(0xffededef);
-
 
   // Color switchColor = Color(0xff1a1f32);
   Stream<Uint8List> _tempData() async* {
@@ -176,83 +177,105 @@ class _HomeState extends State<Home> {
       drawer: Drawer(
           child: ListView(
         children: [
-          Stack(
-            children: <Widget>[
-              ClipPath(
-                clipper: ClippingClass(),
-                child: Container(
-                  height: 100.0,
-                  decoration: BoxDecoration(color: Color(0xffeeebfe)),
+          Container(
+           
+            child: Stack(
+              children: <Widget>[
+                ClipPath(
+                  clipper: ClippingClass(),
+                  child: Container(
+                    height: 100.0,
+                    decoration: BoxDecoration(color: Color(0xffeeebfe)),
+                  ),
                 ),
-              ),
-              Positioned.fill(
-                  child: Align(
-                alignment: Alignment.center,
-                child: Icon(
-                  IconData(0xe5ec, fontFamily: 'MaterialIcons'),
-                  color: primaryColor1,
-                  size: 40,
-                ),
-              ))
-            ],
+                Positioned.fill(
+                    child: Align(
+                  alignment: Alignment.center,
+                  child: Icon(
+                    IconData(0xe5ec, fontFamily: 'MaterialIcons'),
+                    color: primaryColor1,
+                    size: 40,
+                  ),
+                ))
+              ],
+            ),
           ),
           Container(
-              child: ListTile(
-            title: Text(
-              "Enable Bluetooth",
-              style: TextStyle(
-                  color: secondaryColor1,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600),
-            ),
-            trailing: Switch(
-              activeColor: primaryColor1,
-              value: _bluetoothState.isEnabled,
-              onChanged: (bool value) {
-                future() async {
-                  if (value) {
-                    await FlutterBluetoothSerial.instance.requestEnable();
-                    // enableColor = activeColor;
-                  } else {
-                    await FlutterBluetoothSerial.instance.requestDisable();
-                    // enableColor = inactiveColor;
-                  }
+            margin: EdgeInsets.all(10),
+            child: Column(
+              children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Enable Bluetooth",
+                    style: TextStyle(
+                        color: headerTxtColor1,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  Switch(
+                      activeColor: primaryColor1,
+                      inactiveThumbColor: bgColor,
+                      value: _bluetoothState.isEnabled,
+                      onChanged: (bool value) {
+                        future() async {
+                          if (value) {
+                            await FlutterBluetoothSerial.instance.requestEnable();
+                          } else {
+                            await FlutterBluetoothSerial.instance
+                                .requestDisable();
+                          }
 
-                  await getPairedDevices();
-                  _isButtonUnavailable = false;
+                          await getPairedDevices();
+                          _isButtonUnavailable = false;
 
-                  if (_connected) {
-                    _disconnect();
-                  }
-                }
+                          if (_connected) {
+                            _disconnect();
+                          }
+                        }
 
-                future().then((_) {
-                  setState(() {});
-                });
-              },
-            ),
-          )),
-          Container(
-            child: ListTile(
-              leading: DropdownButton(
-                hint: Text(
-                  'Select device',
-                  style: TextStyle(color: secondaryColor1, fontSize: 12),
-                ),
-                items: _getDeviceItems(),
-                onChanged: (value) => setState(() => _device = value),
-                value: _devicesList.isNotEmpty ? _device : null,
+                        future().then((_) {
+                          setState(() {});
+                        });
+                      })
+                ],
               ),
-              trailing: RaisedButton(
-                onPressed: _isButtonUnavailable
-                    ? null
-                    : _connected
-                        ? _disconnect
-                        : _connect,
-                child: Text(_connected ? 'Disconnect' : 'Connect'),
-              ),
-            ),
-          )
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  DropdownButton(
+                    hint: Text(
+                      _bluetoothState.isEnabled ? 'Select device' : 'No device',
+                      style: TextStyle(color: headerTxtColor1, fontSize: 12),
+                    ),
+                    items: _getDeviceItems(),
+                    onChanged: (value) => setState(() => _device = value),
+                    value: _devicesList.isNotEmpty ? _device : null,
+                  ),
+                  RaisedButton(
+                    disabledColor: bgColor,
+                    color:
+                        _connected ? primartCorlor2_light : primartCorlor1_light,
+                    onPressed: _isButtonUnavailable
+                        ? null
+                        : _connected
+                            ? _disconnect
+                            : _connect,
+                    child: _connected
+                        ? Text(
+                            'Disconnect',
+                            style: TextStyle(color: primaryColor2),
+                          )
+                        : Text(
+                            'Connect',
+                            style: TextStyle(color: primaryColor1),
+                          ),
+                  ),
+                ],
+              )
+            ]),
+          ),
         ],
       )),
       body: Stack(children: [
@@ -269,14 +292,12 @@ class _HomeState extends State<Home> {
                           await Future<void>.delayed(Duration(seconds: 10));
                       var wave = ascii.decode(snapshot.data).split(',');
                       var i = (_value1.last.x) + 1;
-                      // double v1 = double.parse(wave[0]);
-                      // double v2 = double.parse(item[1]);
+
                       print(wave[0] + " // " + wave[1]);
                       _value1.removeAt(0);
                       _value1.add(FlSpot(i, double.parse(wave[0])));
 
                       _value2.removeAt(0);
-                      // item = _generateData(i);
                       _value2.add(FlSpot(i, double.parse(wave[0])));
                       i += 1;
                     } catch (NumberFormatException) {}
@@ -314,7 +335,7 @@ class _HomeState extends State<Home> {
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(10),
                                       child: Container(
-                                        // padding: EdgeInsets.only(left:30),
+                                          // padding: EdgeInsets.only(left:30),
                                           decoration: BoxDecoration(
                                             color: Color(0xffffffff),
                                           ),
@@ -377,8 +398,9 @@ class _HomeState extends State<Home> {
     await new Future.delayed(new Duration(milliseconds: 100));
     _scaffoldKey.currentState.showSnackBar(
       new SnackBar(
+        backgroundColor: _connected ? primartCorlor1_light : primartCorlor2_light,
         content: new Text(
-          message,
+          message, style: TextStyle(color: _connected ? primaryColor1 : primaryColor2),
         ),
         duration: duration,
       ),
