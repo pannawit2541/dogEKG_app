@@ -6,13 +6,17 @@ class ChartPage extends StatefulWidget {
 
   List<Color> lineColor;
   // ChartPage({Key key, @required this.value}) : super(key: key);
-  ChartPage({Key key, this.value, this.lineColor}) : super(key: key);
+  ChartPage({
+    Key key,
+    this.value,
+    this.lineColor,
+  }) : super(key: key);
   @override
   _ChartPageState createState() => _ChartPageState();
 }
 
 class _ChartPageState extends State<ChartPage> {
-  Color _color ;
+  Color _color;
   // double interval = widget.value.
   @override
   void initState() {
@@ -30,11 +34,11 @@ class _ChartPageState extends State<ChartPage> {
   //             fontFamily: 'SourceSansPro')),
   //     bottomTitles: SideTitles(
   //       showTitles: true,
-  //       reservedSize: 0,
+  //       reservedSize: 5,
   //       interval: 5,
   //       getTitles: (value) => '|',
-  //       getTextStyles: (value) =>
-  //           TextStyle(color: _color, fontWeight: FontWeight.w200),
+  //       // getTextStyles: (value) =>
+  //       //     TextStyle(color: _color, fontWeight: FontWeight.w200),
   //     ));
 
   // RangeAnnotations rangeAnnotations =
@@ -51,20 +55,30 @@ class _ChartPageState extends State<ChartPage> {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-       borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(20),
       child: Container(
         color: Color(0xfffbfcff),
         child: LineChart(LineChartData(
+          axisTitleData: FlAxisTitleData(bottomTitle: AxisTitle(showTitle: true,margin: 0)),
+            maxX: 60,
+            // maxY: 250,
+            minY: 0,
             titlesData: FlTitlesData(
-              leftTitles: SideTitles(showTitles: false),
+                leftTitles: SideTitles(
+                    showTitles: false,
+                    interval: 5,
+                    getTextStyles: (value) => const TextStyle(
+                        color: Color(0xffd2d3d6),
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'SourceSansPro')),
                 bottomTitles: SideTitles(
-              showTitles: true,
-              reservedSize: 0,
-              interval: 5,
-              getTitles: (value) => '|',
-              getTextStyles: (value) =>
-                  TextStyle(color: _color, fontWeight: FontWeight.w200),
-            )),
+                  showTitles: true,
+                  reservedSize: 5,
+                  interval: 5,
+                  getTitles: (value) => '|',
+                  getTextStyles: (value) =>
+                      TextStyle(color: _color,),
+                )),
             // rangeAnnotations: rangeAnnotations,
             gridData: gridData,
             borderData: borderData,
@@ -73,7 +87,7 @@ class _ChartPageState extends State<ChartPage> {
               LineChartBarData(
                 curveSmoothness: 0.4,
                 colors: widget.lineColor,
-                colorStops: [0, 0.7, 1],
+                // colorStops: [0, 0.7, 1],
                 barWidth: 2,
                 spots: widget.value,
                 isCurved: true,

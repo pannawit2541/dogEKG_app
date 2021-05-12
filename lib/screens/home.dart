@@ -40,8 +40,8 @@ class _HomeState extends State<Home> {
   bool _connected = false;
   bool _isButtonUnavailable = false;
 
-  List<FlSpot> _value1 = [for (double i = 0; i <= 60; i++) FlSpot(i, 0)];
-  List<FlSpot> _value2 = [for (double i = 0; i <= 60; i++) FlSpot(i, 0)];
+  List<FlSpot> _value1 = [FlSpot(0, -1)];
+  List<FlSpot> _value2 = [FlSpot(0, -1)];
 
   Color primaryColor1 = const Color(0xff6340f2);
   Color primaryColor2 = const Color(0xfffa7167);
@@ -178,7 +178,6 @@ class _HomeState extends State<Home> {
           child: ListView(
         children: [
           Container(
-           
             child: Stack(
               children: <Widget>[
                 ClipPath(
@@ -202,8 +201,7 @@ class _HomeState extends State<Home> {
           ),
           Container(
             margin: EdgeInsets.all(10),
-            child: Column(
-              children: [
+            child: Column(children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -221,7 +219,8 @@ class _HomeState extends State<Home> {
                       onChanged: (bool value) {
                         future() async {
                           if (value) {
-                            await FlutterBluetoothSerial.instance.requestEnable();
+                            await FlutterBluetoothSerial.instance
+                                .requestEnable();
                           } else {
                             await FlutterBluetoothSerial.instance
                                 .requestDisable();
@@ -255,8 +254,9 @@ class _HomeState extends State<Home> {
                   ),
                   RaisedButton(
                     disabledColor: bgColor,
-                    color:
-                        _connected ? primartCorlor2_light : primartCorlor1_light,
+                    color: _connected
+                        ? primartCorlor2_light
+                        : primartCorlor1_light,
                     onPressed: _isButtonUnavailable
                         ? null
                         : _connected
@@ -287,19 +287,22 @@ class _HomeState extends State<Home> {
                     return CircularProgressIndicator();
                   } else {
                     try {
-                      // ignore: unnecessary_statements
-                      () async =>
-                          await Future<void>.delayed(Duration(seconds: 10));
                       var wave = ascii.decode(snapshot.data).split(',');
-                      var i = (_value1.last.x) + 1;
-
+                      var i = ((_value1.length) - 1).toDouble();
                       print(wave[0] + " // " + wave[1]);
-                      _value1.removeAt(0);
-                      _value1.add(FlSpot(i, double.parse(wave[0])));
+                      if (_value1.length <= 60 && connection != null ) {
+                        _value1.add(FlSpot(i, double.parse(wave[0])));
+                        _value2.add(FlSpot(i, double.parse(wave[1])));
+                      } else {
+                        _value1 = [FlSpot(0, -1)];
+                        _value2 = [FlSpot(0, -1)];
+                      }
+                      // var i = (_value1.last.x) + 1;
+                      // _value1.removeAt(0);
+                      // _value1.add(FlSpot(i, double.parse(wave[0])));
 
-                      _value2.removeAt(0);
-                      _value2.add(FlSpot(i, double.parse(wave[0])));
-                      i += 1;
+                      // _value2.removeAt(0);
+                      // _value2.add(FlSpot(i, double.parse(wave[0])));
                     } catch (NumberFormatException) {}
 
                     return Container(
@@ -322,8 +325,8 @@ class _HomeState extends State<Home> {
                                             MediaQuery.of(context).size.width,
                                         color: Color(0xffffffff),
                                         child: TopBar(
-                                            wave1: _value1.last.y,
-                                            wave2: _value2.last.y,
+                                            wave1: connection != null ? _value1.last.y : 0,
+                                            wave2: connection != null ? _value2.last.y : 0,
                                             scaffoldKey: _scaffoldKey),
                                       )),
                                 ),
@@ -344,7 +347,7 @@ class _HomeState extends State<Home> {
                                               Expanded(
                                                   child: Container(
                                                 margin: EdgeInsets.fromLTRB(
-                                                    20, 20, 20, 10),
+                                                    20, 20, 20, 5),
                                                 child: ChartPage(
                                                   value: _value1,
                                                   lineColor: [primaryColor1],
@@ -353,7 +356,7 @@ class _HomeState extends State<Home> {
                                               Expanded(
                                                   child: Container(
                                                 margin: EdgeInsets.fromLTRB(
-                                                    20, 10, 20, 20),
+                                                    20, 5, 20, 20),
                                                 child: ChartPage(
                                                   value: _value2,
                                                   lineColor: [primaryColor2],
@@ -398,9 +401,11 @@ class _HomeState extends State<Home> {
     await new Future.delayed(new Duration(milliseconds: 100));
     _scaffoldKey.currentState.showSnackBar(
       new SnackBar(
-        backgroundColor: _connected ? primartCorlor1_light : primartCorlor2_light,
+        backgroundColor:
+            _connected ? primartCorlor1_light : primartCorlor2_light,
         content: new Text(
-          message, style: TextStyle(color: _connected ? primaryColor1 : primaryColor2),
+          message,
+          style: TextStyle(color: _connected ? primaryColor1 : primaryColor2),
         ),
         duration: duration,
       ),
