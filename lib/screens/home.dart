@@ -11,10 +11,6 @@ import 'package:flutter_application_1/screens/topBar.dart';
 
 import '../clip/clipping.dart';
 
-//TODO
-//CLEAR : FOR TEST CHART
-import 'dart:math';
-
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -29,7 +25,7 @@ class _HomeState extends State<Home> {
   FlutterBluetoothSerial _bluetooth = FlutterBluetoothSerial.instance;
   // Track the Bluetooth connection with the remote device
   BluetoothConnection connection;
-  int _deviceState;
+  // int _deviceState;
   bool isDisconnecting = false;
   // To track whether the device is still connected to Bluetooth
   bool get isConnected => connection != null && connection.isConnected;
@@ -67,7 +63,7 @@ class _HomeState extends State<Home> {
       });
     });
 
-    _deviceState = 0; // neutral
+    // _deviceState = 0; // neutral
 
     // If the bluetooth of the device is not enabled,
     // then request permission to turn on bluetooth
@@ -157,7 +153,7 @@ class _HomeState extends State<Home> {
   void _disconnect() async {
     setState(() {
       _isButtonUnavailable = true;
-      _deviceState = 0;
+      // _deviceState = 0;
     });
 
     await connection.finish();
@@ -172,6 +168,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    double i = 0;
     return Scaffold(
       key: _scaffoldKey,
       drawer: Drawer(
@@ -190,9 +187,9 @@ class _HomeState extends State<Home> {
                 Positioned.fill(
                     child: Align(
                   alignment: Alignment.center,
-                  child: Icon(
-                    IconData(0xe5ec, fontFamily: 'MaterialIcons'),
-                    color: primaryColor1,
+                  child: const Icon(
+                    IconData(57572, fontFamily: 'MaterialIcons'),
+                    color: Color(0xff6340f2),
                     size: 40,
                   ),
                 ))
@@ -288,21 +285,17 @@ class _HomeState extends State<Home> {
                   } else {
                     try {
                       var wave = ascii.decode(snapshot.data).split(',');
-                      var i = ((_value1.length) - 1).toDouble();
+
                       print(wave[0] + " // " + wave[1]);
-                      if (_value1.length <= 60 && connection != null ) {
+                      if (_value1.length <= 300 && connection != null) {
                         _value1.add(FlSpot(i, double.parse(wave[0])));
                         _value2.add(FlSpot(i, double.parse(wave[1])));
                       } else {
-                        _value1 = [FlSpot(0, -1)];
-                        _value2 = [FlSpot(0, -1)];
+                        i = 0;
+                        _value1 = [FlSpot(i, double.parse(wave[0]))];
+                        _value2 = [FlSpot(i, double.parse(wave[1]))];
                       }
-                      // var i = (_value1.last.x) + 1;
-                      // _value1.removeAt(0);
-                      // _value1.add(FlSpot(i, double.parse(wave[0])));
-
-                      // _value2.removeAt(0);
-                      // _value2.add(FlSpot(i, double.parse(wave[0])));
+                      i += 1;
                     } catch (NumberFormatException) {}
 
                     return Container(
@@ -325,8 +318,12 @@ class _HomeState extends State<Home> {
                                             MediaQuery.of(context).size.width,
                                         color: Color(0xffffffff),
                                         child: TopBar(
-                                            wave1: connection != null ? _value1.last.y : 0,
-                                            wave2: connection != null ? _value2.last.y : 0,
+                                            wave1: connection != null
+                                                ? _value1.last.y
+                                                : 0,
+                                            wave2: connection != null
+                                                ? _value2.last.y
+                                                : 0,
                                             scaffoldKey: _scaffoldKey),
                                       )),
                                 ),
