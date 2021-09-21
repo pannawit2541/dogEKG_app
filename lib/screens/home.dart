@@ -164,6 +164,13 @@ class _HomeState extends State<Home> {
         _isButtonUnavailable = false;
       });
     }
+    setState(() {
+      _value1.clear();
+      _value2.clear();
+      _value1 = [FlSpot(0, -1)];
+      _value2 = [FlSpot(0, -1)];
+    });
+
   }
 
   @override
@@ -285,17 +292,19 @@ class _HomeState extends State<Home> {
                   } else {
                     try {
                       var wave = ascii.decode(snapshot.data).split(',');
+                      print(i.toString() + ": " + wave[0] + " // " + wave[1]);
+                      if (connection != null) {
+                        if (i > 300 || i == 0) {
+                          i = 0;
+                          _value1.clear();
+                          _value2.clear();
+                        }
 
-                      print(wave[0] + " // " + wave[1]);
-                      if (_value1.length <= 300 && connection != null) {
                         _value1.add(FlSpot(i, double.parse(wave[0])));
                         _value2.add(FlSpot(i, double.parse(wave[1])));
-                      } else {
-                        i = 0;
-                        _value1 = [FlSpot(i, double.parse(wave[0]))];
-                        _value2 = [FlSpot(i, double.parse(wave[1]))];
+
+                        i += 1;
                       }
-                      i += 1;
                     } catch (NumberFormatException) {}
 
                     return Container(
